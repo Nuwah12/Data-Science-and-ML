@@ -10,7 +10,7 @@ class DataGenerator():
         self.seed=seed
         self.noise_std=noise_std
         self.noise = np.random.randn(num_samples, 1) * noise_std # Generate noise from the normal distribtion, times some std
-        self.X = np.random.rand(num_samples) # Generate random X values from uniform distribution [0,1]
+        self.X = np.random.rand(num_samples, 1) # Generate random X values from uniform distribution [0,1]
     def __str__(self):
         msg = """
               DataGenerator object::
@@ -31,3 +31,4 @@ class DataGenerator():
     def generate_sinusoidal(self, amplitude, frequency, phase):
          y = amplitude * np.sin(2 * np.pi * frequency * self.X + phase) + self.noise
          return self.X,y
+
