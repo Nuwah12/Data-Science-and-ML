@@ -4,7 +4,7 @@
 ##########
 import numpy as np
 #from sklearn.LinearModel import LinearRegression
-class OLS():
+class LinearRegressionMethods():
     def __init__(self, X, y):
         self.X = X
         self.y = y
@@ -14,7 +14,7 @@ class OLS():
               matrix_sol
               sklearn_sol
               """
-    def matrix_sol(self, bias=True):
+    def ols(self, bias=True):
         ### Add bias term to the X matrix
         if bias==True:
             X_with_bias = np.c_[np.ones((len(self.X), 1)), self.X] # Concatenate objs as columns
