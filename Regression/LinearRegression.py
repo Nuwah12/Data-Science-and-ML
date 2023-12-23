@@ -4,11 +4,14 @@
 ##########
 import numpy as np
 import time
-#from sklearn.LinearModel import LinearRegression
 class LinearRegressionMethods():
     def __init__(self, X, y):
         self.X = X
         self.y = y
+        self.residuals = []
+        self.predictions=[]
+        self.weights=np.zeros(X.shape[1]) 
+        self.bias=0
     def __str__(self):
         msg = """
               Plain Linear Regression Object. Available methods:
@@ -54,23 +57,25 @@ class LinearRegressionMethods():
         """
         n_feats = self.X.shape[1]
         # Initialize weights as zeroes
-        weights = np.zeros(n_feats) 
-        bias = 0
         st = self._timing()
         for i in range(0,num_iters):
             # Predict
-            yhat = np.dot(self.X, weights) + bias
+            yhat = np.dot(self.X, self.weights) + self.bias
+            # Keep track of residuals in the object 
+            self.residuals = np.abs(yhat - self.y)
             # Calculate gradients with respect to weights and bias
             d_weights = -(2/len(self.X)) * np.dot(self.X.T, (self.y - yhat))
             d_bias = -(2/len(self.X)) * np.sum(self.y - yhat)
-            # Update weights and learning rate
-            weights -= learning_rate * d_weights
-            bias -= learning_rate * d_bias
+            # Update weights and bias
+            self.weights -= learning_rate * d_weights
+            self.bias -= learning_rate * d_bias
             # Calculate cost
             cost = np.mean((yhat - self.y)**2)
-            print('Cost for iteration {}: {}'.format(i, cost))
+            #print('Cost for iteration {}: {}'.format(i, cost))
                 # calculate timing
         time_ns = self._timing(start=False, start_time=st)
         time_s = time_ns/1e9
         print("Execution time : {}ns == {}s".format(time_ns, time_s))
-        return weights, bias
+        # Make predictions
+        self.predictions = np.dot(self.X, self.weights) + self.bias
+        return self
