@@ -4,14 +4,14 @@
 ##########
 import numpy as np
 class DataGenerator():
-    def __init__(self, num_samples=1000, num_features=1, seed=None, noise_std=1):
+    def __init__(self, num_samples=1000, num_features=1, domain=(0,1), seed=None, noise_std=1):
         np.random.seed(seed)
         self.n_samples=num_samples
         self.seed=seed
         self.noise_std=noise_std
         self.num_features = num_features
         self.noise = np.random.randn(num_samples) * noise_std # Generate noise from the normal distribtion, times some std
-        self.X = np.random.rand(num_samples, num_features) # Generate random X values from uniform distribution [0,1]
+        self.X = (domain[1]-domain[0]) * np.random.random_sample(size=(num_samples,num_features)) + domain[0] # Generate random X values from uniform distribution [0,1]
     def __str__(self):
         msg = """
               DataGenerator object::
