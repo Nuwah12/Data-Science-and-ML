@@ -46,14 +46,14 @@ class DataGenerator():
             for j in range(deg+1): # Each degree corresponds to one of the expanded polynomial features, 
                 #                       in decreasing order - i.e. if the degree for a given feature is 2, 
                 #                       3 weights (coefficients) must be multiplied by that feature
-                poly_feat = coeffs[j] * (vals**(deg-j))
+                poly_feat = coeffs[len(coeffs)-j-1] * (vals**(deg-j))
                 #print(poly_feat)
                 polynomial_features[:,c] = poly_feat
                 c+=1
         #polynomial_features+=self.noise
         y = np.sum(polynomial_features, axis=1)
         y+=self.noise
-        return self.X,y
+        return polynomial_features,y
     def generate_exponential(self, base, exponent):
         y = base ** (exponent * self.X) + self.noise
         return self.X,y
