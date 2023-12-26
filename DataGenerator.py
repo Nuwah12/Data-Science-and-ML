@@ -39,20 +39,17 @@ class DataGenerator():
         polynomial_features = np.empty((self.n_samples, num_poly_features)) # init new matrix of the right size for our orignial + polynomial feautres
         for i in range(self.num_features): # Loop thru features (columns)
             vals = self.X[:,i]
-            #print(vals)
             deg = degrees[i]
             coeffs = coefficients[i]
             c = 0 # Counter for column number in out new polynomial feature matrox
             for j in range(deg+1): # Each degree corresponds to one of the expanded polynomial features, 
                 #                       in decreasing order - i.e. if the degree for a given feature is 2, 
                 #                       3 weights (coefficients) must be multiplied by that feature
-                poly_feat = coeffs[len(coeffs)-j-1] * (vals**(deg-j))
-                #print(poly_feat)
-                polynomial_features[:,c] = poly_feat
+                polynomial_features[:,c] = vals**(deg-j)
                 c+=1
         #polynomial_features+=self.noise
-        y = np.sum(polynomial_features, axis=1)
-        y+=self.noise
+        y = np.dot(polynomial_features, coeffs)
+        y += self.noise
         return polynomial_features,y
     def generate_exponential(self, base, exponent):
         y = base ** (exponent * self.X) + self.noise
