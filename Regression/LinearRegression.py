@@ -78,4 +78,5 @@ class LinearRegressionMethods():
         print("Execution time : {}ns == {}s".format(time_ns, time_s))
         # Make predictions
         self.predictions = np.dot(self.X, self.weights) + self.bias
+        self.residuals = np.abs(self.predictions - self.y)
         return self
