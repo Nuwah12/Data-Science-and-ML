@@ -16,13 +16,15 @@ class LinearRegressionMethods():
         msg = """
               Plain Linear Regression Object. Available methods:
               ols - deterministically solve for best betas with Ordinary least Squares (OLS)
-              """
+              Gradient Descent w/ Mean Squared Error (MSE) - minimizes MSE via gradient descent
+              X = {}
+              y = {}
+              """.format(self.X, self.y)
+        return msg
     def _timing(self, start=True, start_time=None):
-        if start:
-            return time.process_time_ns()
-        else:
-            return time.process_time_ns() - start_time
-    def ols(self, bias=True):
+        if start: return time.process_time_ns()
+        else: return time.process_time_ns() - start_time
+    def ols(self):
         """
         Solves regression problem via deterministic Ordinary Least Squares (OLS) 
 
@@ -32,18 +34,16 @@ class LinearRegressionMethods():
         Returns:
             w_hat: learned weights
         """
-        if bias==True:
-            X_with_bias = np.c_[np.ones((len(self.X), 1)), self.X] # Concatenate objs as columns
-        else:
-            X_with_bias = self.X
         st = self._timing()
-        w_hat = np.linalg.inv(X_with_bias.T.dot(X_with_bias)).dot(X_with_bias.T).dot(self.y)
+        w_hat = np.linalg.inv(self.X.T.dot(self.X)).dot(self.X.T).dot(self.y)
+        self.weights = w_hat
         # calculate timing
         time_ns = self._timing(start=False, start_time=st)
         time_s = time_ns/1e9
         print("Execution time : {}ns == {}s".format(time_ns, time_s))
-        print('Intercept: {} Weights: {}'.format(w_hat[0], w_hat[1:]))
-        return w_hat
+        self.predictions = np.dot(self.X, self.weights) + self.bias
+        self.residuals = np.abs(self.predictions - self.y)
+        return self
     def mse_gradient_descent(self, num_iters=500, learning_rate=0.05):
         """
         Finds ideal weights for a matrix (self.X) and target value (self.y) assuming a linear relationship y=w1x1 + w2x2 + ... xnxn
