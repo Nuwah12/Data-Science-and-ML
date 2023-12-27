@@ -44,7 +44,7 @@ class LinearRegressionMethods():
         self.predictions = np.dot(self.X, self.weights) + self.bias
         self.residuals = np.abs(self.predictions - self.y)
         return self
-    def mse_gradient_descent(self, num_iters=500, learning_rate=0.05):
+    def mse_gradient_descent(self, num_iters=500, learning_rate=0.05, threshold=None):
         """
         Finds ideal weights for a matrix (self.X) and target value (self.y) assuming a linear relationship y=w1x1 + w2x2 + ... xnxn
 
@@ -71,8 +71,16 @@ class LinearRegressionMethods():
             self.bias -= learning_rate * d_bias
             # Calculate cost
             cost = np.mean((yhat - self.y)**2)
-            #print('Cost for iteration {}: {}'.format(i, cost))
-                # calculate timing
+            # If convergance threshold was specified:
+            if threshold is None:
+                continue
+            else:
+                if cost > threshold:
+                    continue
+                else:
+                    print('Converged after {} iterations, cost = {}'.format(i, cost))
+                    break
+        # calculate timing
         time_ns = self._timing(start=False, start_time=st)
         time_s = time_ns/1e9
         print("Execution time : {}ns == {}s".format(time_ns, time_s))
