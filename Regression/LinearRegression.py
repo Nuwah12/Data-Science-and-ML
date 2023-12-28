@@ -64,12 +64,12 @@ class LinearRegressionMethods():
             # Keep track of residuals in the object 
             self.residuals = np.abs(yhat - self.y)
             # Calculate gradients with respect to weights and bias
-            d_weights = -(2/len(self.X)) * np.dot(self.X.T, (self.y - yhat))
-            d_bias = -(2/len(self.X)) * np.sum(self.y - yhat)
+            weight_gradient = (2/len(self.X)) * np.dot(self.X.T, (yhat - self.y))
+            bias_gradient = (2/len(self.X)) * np.sum(yhat - self.y)
             # Update weights and bias
-            self.weights -= learning_rate * d_weights
-            self.bias -= learning_rate * d_bias
-            # Calculate cost
+            self.weights -= learning_rate * weight_gradient
+            self.bias -= learning_rate * bias_gradient
+            # Calculate cost (loss, the Mean Squared Error)
             cost = np.mean((yhat - self.y)**2)
             # If convergance threshold was specified:
             if threshold is None:
