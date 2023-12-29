@@ -4,14 +4,8 @@
 ##########
 import numpy as np
 import time
-class L1RegularizedRegressionMethods():
-    def __init__(self, X, y):
-        self.X = X
-        self.y = y
-        self.residuals = []
-        self.predictions=[]
-        self.weights=np.zeros(X.shape[1]) 
-        self.bias=0
+from .LinearRegression import LinearRegressionMethods
+class L1RegularizedRegressionMethods(LinearRegressionMethods):
     def __str__(self):
         msg = """
               L1-Regularized Linear Regression Object. Available methods:
@@ -20,9 +14,6 @@ class L1RegularizedRegressionMethods():
               y = {}
               """.format(self.X, self.y)
         return msg
-    def _timing(self, start=True, start_time=None):
-        if start: return time.process_time_ns()
-        else: return time.process_time_ns() - start_time
     def mse_gradient_descent(self, num_iters=500, learning_rate=0.05, threshold=None, L1_lambda=0.5):
         """
         Finds ideal weights for a matrix (self.X) and target value (self.y) assuming a linear relationship y=w1x1 + w2x2 + ... xnxn
