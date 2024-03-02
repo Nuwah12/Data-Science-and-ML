@@ -3,8 +3,19 @@
 # Noah Burget
 ##########
 import numpy as np
+import math
 class DataGenerator():
     def __init__(self, num_samples=1000, num_features=1, domain=(0,1), seed=None, noise_std=1):
+        """
+        Initialize a DataGenerator object
+        Arguments:
+            num_samples - no. samples to have in dataset
+            num_features - no. features to have in dataset
+            domain - range to draw Uniform random sample from (default: [0,1))     
+            seed - random seed (default None)
+            noise_std - std. devation of guassian noise (default: 1) 
+        The samples drawn are (by default) from the standard uniform deviation [0,1]
+        """
         np.random.seed(seed)
         self.n_samples=num_samples
         self.seed=seed
@@ -48,14 +59,26 @@ class DataGenerator():
                 polynomial_features[:,c] = vals**(deg-j)
                 c+=1
         #polynomial_features+=self.noise
-        y = np.dot(polynomial_features, coeffs)
+        coefficients = np.array(coefficients).flatten()
+        y = np.dot(polynomial_features, coefficients)
         y += self.noise
         return polynomial_features,y
-    def generate_exponential(self, base, exponent):
-        y = base ** (exponent * self.X) + self.noise
-        return self.X,y
-    def generate_sinusoidal(self, amplitude, frequency, phase):
-         y = amplitude * np.sin(2 * np.pi * frequency * self.X + phase) + self.noise
-         return self.X,y
+    def generate_synthetic_logisticregression(self, degrees, coefficients, threshold=0.5):
+        """
+        Function for generating synthetic (response) data for training a logistic regression model
+        All we are doing here is taking the response variable from one of the other data generation methods and passing it through a inverse-logit function (standard logistic function)
+        sigma(x) = 1/(1+e^{-x})
 
+        parameters:
+            degrees - the polynomial degree to apply to each feature. its length must be equal to the numbver of features in your dataset
+            coefficients - the coefficients (i.e. true parameters) to apply to each polynomial of each feature. its length must be equal to (degree of polynomial+1) * number of features
+            threshold - decision threshold to apply to the sigmoid output (default=0.5)
+        """
+        x,y = self.generate_polynomial(degrees=degrees, coefficients=coefficients)
+        y_prob = self._sigmoid(y)
+        self.probabilities = y_prob
+        y = [1 if i >= threshold else 0 for i in y_prob]
+        return x,y
+    def _sigmoid(self, x):
+        return 1 / (1 + math.e**x)
 
