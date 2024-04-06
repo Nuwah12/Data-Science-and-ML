@@ -10,3 +10,6 @@ A collection of python modules exists here for training machine learning mdoels 
     
 #### Books referenced:
 * Peter Dalgaard - Introductory Statistics with R
+
+#### TODO:
+Right now the polynomial models are essentially cheating, since we give it the exact model complexity it needs to predict f. Fix: add a parameter for modek complexity; it would represent essentially the number of exponents you need to raise the data to (add addtl cols). 
